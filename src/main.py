@@ -31,11 +31,20 @@ def base():
             flash("welcome to the clan")
             return redirect(url_for('loggedIn'))
     else:
-        return render_template('home.html')
+        ip = request.remote_addr
+        user = session.query(UserAccount).filter_by(ip=ip).one()
+        if user:
+            return redirect(url_for('profile', user_id=user.id))
+        else:
+            return render_template('home.html')
 
 @app.route('/home/')
 def loggedIn():
     return 'Hi'
+
+@app.route('/game_profile/<int:user_id>')
+def profile(user_id):
+    return render_template('profile.html', user_id=user_id)
 
 if __name__ == '__main__':
     app.secret_key='super'
