@@ -9,7 +9,7 @@ from sqlalchemy import create_engine
 Base = declarative_base()
 
 class UserAccount(Base):
-    __tablename__ = 'user'
+    __tablename__ = 'user_accounts'
 
     id = Column(Integer, primary_key=True)
     ip = Column(String(15), nullable=False)
@@ -17,5 +17,6 @@ class UserAccount(Base):
     password = Column(String(10), nullable=False)
     encrypted = Column(String(300), nullable=False)
 
-engine = create_engine('postgresql://localhost:5434/pvp/')
-Base.metadata.create_all(engine)
+
+Engine = create_engine('postgresql://localhost:5434/pvp')
+Base.metadata.create_all(Engine)
