@@ -13,7 +13,7 @@ Base.metadata.create_all(Engine)
 DBsession = sessionmaker(bind=Engine)
 session = DBsession()
 
-@app.route('//riot.txt')
+@app.route('/riot.txt')
 def riot():
     return send_from_directory(app.static_folder, request.path[1:])
 @app.route('/', methods=['GET', 'POST'])
@@ -49,7 +49,7 @@ def base():
         # and require cookie, session or JWT setting
         ip = request.remote_addr
         # DB REQEUST
-        user = session.query(UserAccount).filter_by(ip=ip).one()
+        user = session.query(UserAccount).filter_by(ip=ip)
         if user:
             return redirect(url_for('profile', user_id=user.id))
         else:
