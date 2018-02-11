@@ -1,0 +1,16 @@
+<html>
+    <body>
+        <form action="{{url_for('profile', user_id=user_id)}}" method='post'>
+            {% for g in games %}
+                <img src="{{ g.image_url }}" alt="Smiley face" height="42" width="42">
+                <input type='text' size='30' name='game_id' value="{{ g.id }}" >
+                <h4>{{ g.title }}</h4>
+            {% endfor %}
+            <p>Gamer Name:</p>
+                <input type='text' size='30' name='gamer_name' >
+            <p>Location you represent:</p>
+                <input type='text' size='30' name='location' >
+            <input type='submit' value='Create' >
+        </form>
+    </body>
+</html>
