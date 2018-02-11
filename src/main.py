@@ -1,5 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
-app = Flask(__name__)
+from flask import Flask, send_from_directory, render_template, request, redirect, url_for, flash, jsonify
+app = Flask(__name__, static_folder='static')
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -11,6 +11,9 @@ Base.metadata.create_all(Engine)
 DBsession = sessionmaker(bind=Engine)
 session = DBsession()
 
+@app.route('//riot.txt')
+def riot():
+    return send_from_directory(app.static_folder, request.path[1:])
 @app.route('/', methods=['GET', 'POST'])
 def base():
     if request.method == 'POST':
