@@ -1,4 +1,4 @@
-flask = "*"
-sqlalchemy = "*"
-psycopg2 = "*"
-requests = "*"
+Flask==0.12.2
+SQLAlchemy==1.2.2
+psycopg2==2.7.3.2
+requests==2.18.4
