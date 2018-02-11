@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 app = Flask(__name__)
 
+import requests
+from pprint import pprint
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from db.database_setup import Base, UserAccount, Games, UserGames
+from db.database_setup import Base, UserAccount, Games, UserGames, LeagueOfLegendsPlayers
 
 Engine = create_engine('postgresql://localhost:5434/pvp')
 Base.metadata.create_all(Engine)
@@ -59,7 +61,17 @@ def profile(user_id):
         # you want to know if they should add this game or not
         user = session.query(UserGames).filter_by(user_id=user_id).first()
         if user:
-            return 'You got games'
+            r = requests.get('https://euw1.api.riotgames.com/lol/summoner/v3/summoners/by-name/meow%20side?api_key=RGAPI-97d50ce0-ae0b-4b7d-a562-554771bc18ae')
+            if r.status_code == 200:
+                json_res = r.json()
+                newLoLPlayerBase = LeagueOfLegendsPlayers(
+                    user_id=user_id,
+                    account_id=json_res['accountId'],
+                    summoner_level=json_res['summonerLevel'],
+                )
+                session.add(newLoLPlayerBase)
+                session.commit()
+                return 'You got games'
         else:
             newGameForUser = UserGames(
                 user_id=user_id,
@@ -82,6 +94,20 @@ def profile(user_id):
             games = session.query(Games).all()
             return render_template('selet_game.html', games=games, user_id=user_id)
             # return redirect(url_for('select_game', user_id=user_id))
+
+@app.route('/tournament/')
+def createEUWTournament():
+    r = requests.post(
+        'https://euw1.api.riotgames.com/lol/tournament/v3/providers?api_key=RGAPI-97d50ce0-ae0b-4b7d-a562-554771bc18ae',
+        data={
+            "region": "EUW",
+            "url": "https://pvp-uk.herokuapp.com/"
+        })
+    pprint(r.status_code)
+    if r.status_code == 200:
+        json_res = r.json()
+        pprint(json_res)
+        return 'hello'
 
 if __name__ == '__main__':
     app.secret_key='super'
