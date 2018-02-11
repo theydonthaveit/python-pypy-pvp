@@ -6,8 +6,8 @@ verify_ssl = true
 
 [packages]
 
-Flask = "*"
-SQLAlchemy = "*"
+flask = "*"
+sqlalchemy = "*"
 psycopg2 = "*"
 requests = "*"
 
