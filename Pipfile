@@ -7,9 +7,6 @@ verify_ssl = true
 [packages]
 
 flask = "*"
-sqlalchemy = "*"
-psycopg2 = "*"
-requests = "*"
 
 [requires]
 
