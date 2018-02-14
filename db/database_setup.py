@@ -1,10 +1,10 @@
 import os
 import sys
 
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-from sqlalchemy import create_engine
+from sqlalchemy.sql import func
 
 Base = declarative_base()
 
@@ -16,7 +16,7 @@ class UserAccount(Base):
     email = Column(String(50), nullable=False)
     password = Column(String(10), nullable=False)
     encrypted = Column(String(300), nullable=False)
-    creation_date = Column(DateTime, nullable=False)
+    creation_date = Column(DateTime(timezone=True), server_default=func.now())
 
 
 # class Games(Base):
