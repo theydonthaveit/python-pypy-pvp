@@ -21,42 +21,43 @@ def riot():
 
 @app.route('/', methods=['GET', 'POST'])
 def base():
-    if request.method == 'POST':
-        ip = request.remote_addr
-        # DB REQEUST
-        user = session.query(UserAccount).filter_by(email=request.form['email']).one()
-        # TODO
-        # if session expired we need to ask the user to login again
-        if user:
-            flash("You are a user, sign in")
-            return render_template('sign_in.html', user_email=user.email, user_id=user.id)
-        else:
-            # TODO
-            # password will be hashed and the encrypted column will be removed
-            # this was just for testing
-            newUser = UserAccount(
-                ip=ip,
-                email=request.form['email'],
-                password=request.form['password'],
-                encrypted=request.form['email'] + ':' + request.form['password']
-            )
-            session.add(newUser)
-            session.commit()
-            # DB REQEUST
-            user = session.query(UserAccount).filter_by(email=request.form['email']).one()
-            flash("welcome to the clan")
-            return redirect(url_for('profile', user_id=user.id))
-    else:
+    return render_template('home.html')
+    # if request.method == 'POST':
+    #     ip = request.remote_addr
+    #     # DB REQEUST
+    #     user = session.query(UserAccount).filter_by(email=request.form['email']).one()
+    #     # TODO
+    #     # if session expired we need to ask the user to login again
+    #     if user:
+    #         flash("You are a user, sign in")
+    #         return render_template('sign_in.html', user_email=user.email, user_id=user.id)
+    #     else:
+    #         # TODO
+    #         # password will be hashed and the encrypted column will be removed
+    #         # this was just for testing
+    #         newUser = UserAccount(
+    #             ip=ip,
+    #             email=request.form['email'],
+    #             password=request.form['password'],
+    #             encrypted=request.form['email'] + ':' + request.form['password']
+    #         )
+    #         session.add(newUser)
+    #         session.commit()
+    #         # DB REQEUST
+    #         user = session.query(UserAccount).filter_by(email=request.form['email']).one()
+    #         flash("welcome to the clan")
+    #         return redirect(url_for('profile', user_id=user.id))
+    # else:
         # TODO
         # this is just for development as I haven't implemented an web auth
         # and require cookie, session or JWT setting
-        ip = request.remote_addr
-        # DB REQEUST
-        user = session.query(UserAccount).filter_by(ip=ip)
-        if user:
-            return redirect(url_for('profile', user_id=user.id))
-        else:
-            return render_template('home.html')
+        # ip = request.remote_addr
+        # # DB REQEUST
+        # user = session.query(UserAccount).filter_by(ip=ip)
+        # if user:
+        #     return redirect(url_for('profile', user_id=user.id))
+        # else:
+            # return render_template('home.html')
 
 
 # @app.route('/game_profile/<int:user_id>', methods=['GET', 'POST'])
