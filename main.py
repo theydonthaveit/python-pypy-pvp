@@ -8,6 +8,7 @@ from db.database_setup import Base, UserAccount
 # Games, UserGames, LeagueOfLegendsPlayers
 
 app = Flask(__name__, static_folder='static')
+app.secret_key = 'super secret key'
 
 Engine = create_engine('postgres://elvtkkxdyopnvd:5ebbb96b0cb185c48e696696abc1b5099f1a65ce75c0cf693c195b50ad95fa66@ec2-54-247-101-191.eu-west-1.compute.amazonaws.com:5432/dfa1o2mkcmtqon')
 Base.metadata.create_all(Engine)
@@ -25,7 +26,7 @@ def base():
     if request.method == 'POST':
         ip = request.remote_addr
         # DB REQEUST
-        user = session.query(UserAccount).filter_by(email=request.form['email']).count()
+        user = session.query(UserAccount).filter_by(email=request.form['email']).one()
         # TODO
         # if session expired we need to ask the user to login again
         if user:
