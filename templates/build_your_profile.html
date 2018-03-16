@@ -1,0 +1,37 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}
+Sign Up
+{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{url_for('.static', filename='signup.css')}}" />
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class=flashes>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        <form class="form-signin" method='POST' action="/build_gamer_profile">
+            <img class="mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+            <h1 class="h3 mb-3 font-weight-normal">Build your Profile</h1>
+            {{ form.hidden_tag() }}
+            {{ wtf.form_field(form.game) }}
+            {{ wtf.form_field(form.region) }}
+            {{ wtf.form_field(form.summoner_name) }}
+            {{ wtf.form_field(form.country) }}
+            {{ wtf.form_field(form.postcode_zipcode) }}
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Build</button>
+            <p class="mt-5 mb-3 text-muted">&copy; 2018-2019</p>
+        </form>
+    </div>
+{% endblock %}

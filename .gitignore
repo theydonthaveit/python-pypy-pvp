@@ -4,3 +4,8 @@ tmp/
 __pycache__
 .travis.yml
 config/
+.DS_Store
+bin/
+include/
+lib/
+pip-selfcheck.json
