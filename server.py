@@ -2,16 +2,20 @@ from secrets import randbelow
 from flask import Flask, render_template, send_from_directory, url_for, request, redirect, flash
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
 
-from database_setup import Base, Engine, UserAccount
-from forms import LoginForm, RegistrationForm, GamerProfileForm
-from passcode_generator import passcode_generator_INT
-from name_generator import name_generator_STRING
+from database_setup import Base, Engine, UserAccount, GamerProfile, LeagueOfLegendsProfileBase
+from forms.forms import LoginForm, RegistrationForm, GamerProfileForm
+from generators.passcode_generator import passcode_generator_INT
+from generators.name_generator import name_generator_STRING
+from BuildProfile.initialCall import initialCall
+from BuildProfile.matchCall import matchCall, recentMatchCall
+from BuildProfile.tierCall import tierCall
 
-from fake_name_db import fake_name_db_ARRAY
-from fake_logger import fake_logger_ARRAY
+
+from fake.fake_name_db import fake_name_db_ARRAY
+from fake.fake_logger import fake_logger_ARRAY
 
 Base.metadata.create_all(Engine)
 
@@ -94,12 +98,35 @@ def signup():
     return render_template('signup.html', form=form)
 
 
-@app.route('/build_gamer_profile', methods=['GET', 'POST'])
+@app.route('/build_gamer_profile/<int: user_id>', methods=['GET', 'POST'])
 # @login_required
-def buildGamerProfile():
+def buildGamerProfile(user_id):
     form = GamerProfileForm()
     if form.validate_on_submit():
-        return 'things okay'
+        resp = initialCall(form.summoner_name.data)
+
+        User = session.query(UserAccount).get(user_id)
+        User.gamer_profile = [GamerProfile(
+            game = form.game.data,
+            in_game_name = form.summoner_name.data,
+            country = form.country.data,
+            postal_code = form.postcode_zipcode.data
+        )]
+
+        try:
+            session.add(User)
+            newGamerProfile = session.query(GamerProfile).order_by(desc(GamerProfile.id)).first()
+            newGamerProfile.league_of_legends_profile = [
+                LeagueOfLegendsProfileBase(
+                    account_id=resp['accountId']
+                )
+            ]
+            session.add(newGamerProfile)
+            session.commit()
+        except:
+            session.rollback()
+            return 'we are good'
+
     return render_template('build_your_profile.html', form=form)
 
 
