@@ -6,7 +6,7 @@ def initialCall(playerName):
     headers = {
         "Origin": 'null',
         "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
-        "X-Riot-Token": 'RGAPI-1c02343a-7b7c-411c-9968-5cc7ddc6545a',
+        "X-Riot-Token": 'RGAPI-29c9b941-5090-4611-9c28-7fc5f1e86df8',
         "Accept-Language": "en-GB,en;q=0.5",
     }
     r = requests.get(BASE_URL, headers=headers)
